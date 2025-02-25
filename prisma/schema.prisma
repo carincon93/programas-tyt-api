@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                  Int                 @default(autoincrement()) @id
+  nombres             String
+  apellidos           String
+  correo              String
+  telefono            String
+  direccion           String
+  tipoDocumento       String
+  numeroDocumento     String
+
+  profesores          Profesores[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Profesores {
+  id                  Int                 @default(autoincrement()) @id
+
+  userId              Int
+  users               Users               @relation(fields: [userId], references: [id])
+
+  asignaturas         AsignaturaProfesor[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Estudiantes {
+  id                  Int                 @default(autoincrement()) @id
+
+  institucionId       Int
+  instituciones       Instituciones       @relation(fields: [institucionId], references: [id])
+
+  grupoId             Int
+  grupos              Grupos              @relation(fields: [grupoId], references: [id])
+
+  notas               Notas[]
+  asistencias         Asistencias[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Notas {
+  id                  Int                 @default(autoincrement()) @id
+  nota                Int
+  fecha               String
+  observacion         String
+
+  estudianteId        Int
+  estudiantes         Estudiantes         @relation(fields: [estudianteId], references: [id])
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Grupos {
+  id                  Int                 @default(autoincrement()) @id
+
+  programaId          Int
+  programas           Programas           @relation(fields: [programaId], references: [id])
+
+  estudiantes         Estudiantes[]     
+  horarios            Horarios[]     
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Asistencias {
+  id                  Int                 @default(autoincrement()) @id
+  nota                Int
+  fecha               String
+  observacion         String
+
+  estudianteId        Int
+  estudiantes         Estudiantes         @relation(fields: [estudianteId], references: [id])
+
+  asignaturaId        Int
+  asignaturas         Asignaturas         @relation(fields: [asignaturaId], references: [id])
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Asignaturas {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+
+  asistencias         Asistencias[]
+  profesores          AsignaturaProfesor[]
+  horarios            AsignaturaHorario[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model AsignaturaHorario {
+  id                  Int                @default(autoincrement()) @id
+  
+  asignaturaId        Int
+  asignaturas         Asignaturas          @relation(fields: [asignaturaId], references: [id])
+ 
+  horarioId           Int
+  horarios            Horarios           @relation(fields: [horarioId ], references: [id] )
+}
+
+model AsignaturaProfesor {
+  id                  Int                @default(autoincrement()) @id
+
+  asignaturaId        Int
+  asignaturas         Asignaturas          @relation(fields: [asignaturaId], references: [id])
+
+  profesorId          Int
+  profesores          Profesores          @relation(fields: [profesorId], references: [id])
+ 
+}
+
+model Universidades {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+  direccion           String
+  telefono            String
+
+  programas           Programas[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Programas {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+ 
+  grupos              Grupos[]
+
+  universidadId       Int
+  universidades       Universidades       @relation(fields: [universidadId], references: [id])
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Instituciones {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+  direccion           String
+  telefono            String
+
+  estudiantes         Estudiantes[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Horarios {
+  id                  Int                 @default(autoincrement()) @id
+  horaInicio          String
+  horaFin             String
+  fecha               String
+
+  grupoId             Int
+  grupos              Grupos              @relation(fields: [grupoId], references: [id])
+
+  asignaturas         AsignaturaHorario[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Informes {
+  id                  Int                 @default(autoincrement()) @id
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Roles {
+  id                  Int                 @default(autoincrement()) @id
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Dashboard {
+  id                  Int                 @default(autoincrement()) @id
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
