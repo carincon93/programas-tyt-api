@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GruposService } from './grupos.service';
 import { CreateGrupoDto } from './dto/create-grupo.dto';
 import { UpdateGrupoDto } from './dto/update-grupo.dto';
@@ -10,6 +18,14 @@ export class GruposController {
   @Post()
   create(@Body() createGrupoDto: CreateGrupoDto) {
     return this.gruposService.create(createGrupoDto);
+  }
+
+  @Post(':grupoId/estudiante/:estudianteId')
+  enrollEstudiante(
+    @Param('grupoId') grupoId: string,
+    @Param('estudianteId') estudianteId: string,
+  ) {
+    return this.gruposService.enrollEstudiante(+grupoId, +estudianteId);
   }
 
   @Get()

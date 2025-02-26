@@ -6,35 +6,67 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class AsistenciasService {
   constructor(private prisma: PrismaService) {}
-  
-  create(createAsistenciaDto: CreateAsistenciaDto) {
+
+  create(
+    asignaturaId: number,
+    estudianteId: number,
+    createAsistenciaDto: CreateAsistenciaDto,
+  ) {
+
     return this.prisma.asistencias.create({
-      data: createAsistenciaDto,
-    })
+      data: {
+        ...createAsistenciaDto,
+        asignaturaId,
+        estudianteId,
+      },
+    });
   }
 
-  findAll() {
-    return this.prisma.asistencias.findMany()
+  findAll(estudianteId: number) {
+    return this.prisma.asistencias.findMany({
+      include: {
+        asignatura: true,
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      where: {
+        estudianteId,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   findOne(id: number) {
     return this.prisma.asistencias.findUnique({
-        where: { id },
-    })
+      include: {
+        asignatura: true,
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      where: { id },
+    });
   }
 
   update(id: number, updateAsistenciaDto: UpdateAsistenciaDto) {
     return this.prisma.asistencias.update({
       where: {
-          id,
+        id,
       },
       data: updateAsistenciaDto,
-    })
+    });
   }
 
   remove(id: number) {
     return this.prisma.asistencias.delete({
       where: { id },
-    })
+    });
   }
 }

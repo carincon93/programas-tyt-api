@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateInstitucioneDto {
-    @ApiProperty()
-    nombre:              string
+  @ApiProperty()
+  nombre: string;
 
-    @ApiProperty()
-    direccion:           string
+  @ApiProperty()
+  direccion: string;
 
-    @ApiProperty()
-    telefono:            string
+  @ApiProperty()
+  telefono: string;
 }

@@ -1,6 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAsignaturaDto {
-    @ApiProperty()
-    nombre: string
+  @ApiProperty()
+  codigoAsignatura: string;
+
+  @ApiProperty()
+  nombre: string;
 }

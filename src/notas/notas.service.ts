@@ -6,35 +6,86 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class NotasService {
   constructor(private prisma: PrismaService) {}
-  
-  create(createNotaDto: CreateNotaDto) {
+
+  create(
+    asignaturaId: number,
+    estudianteId: number,
+    createNotaDto: CreateNotaDto,
+  ) {
+    createNotaDto.nota = Number(createNotaDto.nota);
+
     return this.prisma.notas.create({
-      data: createNotaDto,
-    })
+      data: {
+        ...createNotaDto,
+        asignaturaId,
+        estudianteId,
+      },
+    });
   }
 
   findAll() {
-    return this.prisma.notas.findMany()
+    return this.prisma.notas.findMany({
+      include: {
+        asignatura: true,
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
+  findAllByEstudiante(estudianteId: number) {
+    return this.prisma.notas.findMany({
+      include: {
+        asignatura: true,
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      where: {
+        estudianteId,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   findOne(id: number) {
     return this.prisma.notas.findUnique({
-        where: { id },
-    })
+      include: {
+        asignatura: true,
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      where: { id },
+    });
   }
 
   update(id: number, updateNotaDto: UpdateNotaDto) {
+    updateNotaDto.nota = Number(updateNotaDto.nota);
+
     return this.prisma.notas.update({
-        where: {
-            id,
-        },
-        data: updateNotaDto,
-    })
+      where: {
+        id,
+      },
+      data: updateNotaDto,
+    });
   }
 
   remove(id: number) {
     return this.prisma.notas.delete({
       where: { id },
-    })
+    });
   }
 }

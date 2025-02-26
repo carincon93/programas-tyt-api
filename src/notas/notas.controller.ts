@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { NotasService } from './notas.service';
 import { CreateNotaDto } from './dto/create-nota.dto';
 import { UpdateNotaDto } from './dto/update-nota.dto';
@@ -7,14 +15,27 @@ import { UpdateNotaDto } from './dto/update-nota.dto';
 export class NotasController {
   constructor(private readonly notasService: NotasService) {}
 
-  @Post()
-  create(@Body() createNotaDto: CreateNotaDto) {
-    return this.notasService.create(createNotaDto);
+  @Post(':asignaturaId/estudiante/:estudianteId')
+  create(
+    @Param('asignaturaId') asignaturaId: string,
+    @Param('estudianteId') estudianteId: string,
+    @Body() createNotaDto: CreateNotaDto,
+  ) {
+    return this.notasService.create(
+      +asignaturaId,
+      +estudianteId,
+      createNotaDto,
+    );
   }
 
   @Get()
   findAll() {
     return this.notasService.findAll();
+  }
+
+  @Get('estudiantes/:estudianteId')
+  findAllByEstudiante(@Param('estudianteId') estudianteId: string) {
+    return this.notasService.findAllByEstudiante(+estudianteId);
   }
 
   @Get(':id')

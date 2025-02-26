@@ -24,112 +24,10 @@ model Users {
   numeroDocumento     String
 
   profesores          Profesores[]
+  estudiantes         Estudiantes[]
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt  
-}
-
-model Profesores {
-  id                  Int                 @default(autoincrement()) @id
-
-  userId              Int
-  users               Users               @relation(fields: [userId], references: [id])
-
-  asignaturas         AsignaturaProfesor[]
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt  
-}
-
-model Estudiantes {
-  id                  Int                 @default(autoincrement()) @id
-
-  institucionId       Int
-  instituciones       Instituciones       @relation(fields: [institucionId], references: [id])
-
-  grupoId             Int
-  grupos              Grupos              @relation(fields: [grupoId], references: [id])
-
-  notas               Notas[]
-  asistencias         Asistencias[]
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt  
-}
-
-model Notas {
-  id                  Int                 @default(autoincrement()) @id
-  nota                Int
-  fecha               String
-  observacion         String
-
-  estudianteId        Int
-  estudiantes         Estudiantes         @relation(fields: [estudianteId], references: [id])
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt   
-}
-
-model Grupos {
-  id                  Int                 @default(autoincrement()) @id
-
-  programaId          Int
-  programas           Programas           @relation(fields: [programaId], references: [id])
-
-  estudiantes         Estudiantes[]     
-  horarios            Horarios[]     
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt   
-}
-
-model Asistencias {
-  id                  Int                 @default(autoincrement()) @id
-  nota                Int
-  fecha               String
-  observacion         String
-
-  estudianteId        Int
-  estudiantes         Estudiantes         @relation(fields: [estudianteId], references: [id])
-
-  asignaturaId        Int
-  asignaturas         Asignaturas         @relation(fields: [asignaturaId], references: [id])
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt   
-}
-
-model Asignaturas {
-  id                  Int                 @default(autoincrement()) @id
-  nombre              String
-
-  asistencias         Asistencias[]
-  profesores          AsignaturaProfesor[]
-  horarios            AsignaturaHorario[]
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt   
-}
-
-model AsignaturaHorario {
-  id                  Int                @default(autoincrement()) @id
-  
-  asignaturaId        Int
-  asignaturas         Asignaturas          @relation(fields: [asignaturaId], references: [id])
- 
-  horarioId           Int
-  horarios            Horarios           @relation(fields: [horarioId ], references: [id] )
-}
-
-model AsignaturaProfesor {
-  id                  Int                @default(autoincrement()) @id
-
-  asignaturaId        Int
-  asignaturas         Asignaturas          @relation(fields: [asignaturaId], references: [id])
-
-  profesorId          Int
-  profesores          Profesores          @relation(fields: [profesorId], references: [id])
- 
 }
 
 model Universidades {
@@ -139,6 +37,7 @@ model Universidades {
   telefono            String
 
   programas           Programas[]
+  profesores          Profesores[]
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt  
@@ -146,17 +45,90 @@ model Universidades {
 
 model Programas {
   id                  Int                 @default(autoincrement()) @id
+  codigoPrograma      String              @unique
   nombre              String
  
   grupos              Grupos[]
 
   universidadId       Int
-  universidades       Universidades       @relation(fields: [universidadId], references: [id])
+  universidad         Universidades       @relation(fields: [universidadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt   
 }
 
+model Asignaturas {
+  id                  Int                 @default(autoincrement()) @id
+  codigoAsignatura    String              @unique
+  nombre              String
+
+  asistencias         Asistencias[]
+  notas               Notas[]
+  asignaturaProfesores AsignaturaProfesor[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Grupos {
+  id                  Int                 @default(autoincrement()) @id
+  codigoGrupo         String              @unique
+
+  programaId          Int
+  programa            Programas           @relation(fields: [programaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  estudianteGrupos    EstudianteGrupo[]     
+  horarios            AsignaturaGrupo[]     
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model AsignaturaGrupo {
+  id                  Int                 @default(autoincrement()) @id
+  horaInicio          String
+  horaFin             String
+  fecha               String
+
+  asignaturaProfesorId Int
+  asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  grupoId             Int
+  grupo               Grupos              @relation(fields: [grupoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Profesores {
+  id                  Int                 @default(autoincrement()) @id
+
+  userId              Int
+  user                Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  universidadId       Int
+  universidad         Universidades       @relation(fields: [universidadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  asignaturas         AsignaturaProfesor[]
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model AsignaturaProfesor {
+  id                  Int                @default(autoincrement()) @id
+
+  asignaturaId        Int
+  asignatura          Asignaturas          @relation(fields: [asignaturaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  profesorId          Int
+  profesor            Profesores          @relation(fields: [profesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  horarios            AsignaturaGrupo[]
+
+}
+
+// 
 model Instituciones {
   id                  Int                 @default(autoincrement()) @id
   nombre              String
@@ -169,21 +141,72 @@ model Instituciones {
   updatedAt           DateTime            @updatedAt  
 }
 
-model Horarios {
+model Estudiantes {
   id                  Int                 @default(autoincrement()) @id
-  horaInicio          String
-  horaFin             String
-  fecha               String
+  codigoEstudiante    String              @unique
 
-  grupoId             Int
-  grupos              Grupos              @relation(fields: [grupoId], references: [id])
+  userId              Int
+  user                Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  asignaturas         AsignaturaHorario[]
+  institucionId       Int
+  institucion         Instituciones       @relation(fields: [institucionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  estudianteGrupos    EstudianteGrupo[]            
+
+  notas               Notas[]
+  asistencias         Asistencias[]
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt  
 }
 
+model EstudianteGrupo {
+  id                  Int                 @default(autoincrement()) @id
+
+  estudianteId        Int
+  estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  grupoId             Int
+  grupo               Grupos              @relation(fields: [grupoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Notas {
+  id                  Int                 @default(autoincrement()) @id
+  nota                Float
+  fecha               String
+  observacion         String
+
+  asignaturaId        Int
+  asignatura          Asignaturas         @relation(fields: [asignaturaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  estudianteId        Int
+  estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+model Asistencias {
+  id                  Int                 @default(autoincrement()) @id
+  asiste              Boolean
+  fecha               String
+  observacion         String
+
+  asignaturaId        Int
+  asignatura          Asignaturas         @relation(fields: [asignaturaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  estudianteId        Int
+  estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt   
+}
+
+
+// 
 model Informes {
   id                  Int                 @default(autoincrement()) @id
 
@@ -191,12 +214,6 @@ model Informes {
   updatedAt           DateTime            @updatedAt  
 }
 
-model Roles {
-  id                  Int                 @default(autoincrement()) @id
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt  
-}
 
 model Dashboard {
   id                  Int                 @default(autoincrement()) @id

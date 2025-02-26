@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AsignaturasService } from './asignaturas.service';
 import { CreateAsignaturaDto } from './dto/create-asignatura.dto';
 import { UpdateAsignaturaDto } from './dto/update-asignatura.dto';
+import { CreateHorarioDto } from './dto/create-horario.dto';
 
 @Controller('asignaturas')
 export class AsignaturasController {
@@ -13,18 +22,34 @@ export class AsignaturasController {
   }
 
   @Post(':asignaturaId/profesor/:profesorId')
-  assignProfesor(@Param('asignaturaId') asignaturaId: string, @Param('profesorId') profesorId: string) {
+  assignProfesor(
+    @Param('asignaturaId') asignaturaId: string,
+    @Param('profesorId') profesorId: string,
+  ) {
     return this.asignaturasService.assignProfesor(+asignaturaId, +profesorId);
   }
 
-  @Post(':asignaturaId/horario/:horarioId')
-  assignHorario(@Param('asignaturaId') asignaturaId: string, @Param('horarioId') horarioId: string) {
-    return this.asignaturasService.assignProfesor(+asignaturaId, +horarioId);
+  @Post(':asignaturaProfesorId/grupo/:grupoId')
+  assignHorario(
+    @Param('asignaturaProfesorId') asignaturaProfesorId: string,
+    @Param('grupoId') grupoId: string,
+    @Body() createHorarioDto: CreateHorarioDto,
+  ) {
+    return this.asignaturasService.assignHorario(
+      +asignaturaProfesorId,
+      +grupoId,
+      createHorarioDto,
+    );
   }
 
   @Get()
   findAll() {
     return this.asignaturasService.findAll();
+  }
+
+  @Get(':asignaturaId/grupo/:grupoId')
+  findAllByEstudiante(@Param('estudianteId') estudianteId: string) {
+    return this.asignaturasService.findAllByEstudiante(+estudianteId);
   }
 
   @Get(':id')
@@ -33,7 +58,10 @@ export class AsignaturasController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAsignaturaDto: UpdateAsignaturaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAsignaturaDto: UpdateAsignaturaDto,
+  ) {
     return this.asignaturasService.update(+id, updateAsignaturaDto);
   }
 
