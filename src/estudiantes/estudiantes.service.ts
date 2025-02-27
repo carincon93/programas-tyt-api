@@ -6,35 +6,77 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class EstudiantesService {
   constructor(private prisma: PrismaService) {}
-  
-  create(createEstudianteDto: CreateEstudianteDto) {
-    return this.prisma.estudiantes.create({
-      data: createEstudianteDto,
-    })
+
+  async create(createEstudianteDto: CreateEstudianteDto) {
+    const { user } = createEstudianteDto;
+
+    const newUser = await this.prisma.users.create({
+      data: { ...user },
+    });
+
+    return await this.prisma.estudiantes.create({
+      data: {
+        institucionId: createEstudianteDto.institucionId,
+        grupoId: createEstudianteDto.grupoId,
+        codigoEstudiante: createEstudianteDto.codigoEstudiante,
+        userId: newUser.id,
+      },
+    });
   }
 
   findAll() {
-    return this.prisma.estudiantes.findMany()
+    return this.prisma.estudiantes.findMany({
+      include: {
+        user: true,
+        institucion: true,
+        grupo: {
+          include: {
+            programa: true,
+          },
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   findOne(id: number) {
     return this.prisma.estudiantes.findUnique({
-        where: { id },
-    })
+      include: {
+        user: true,
+        institucion: true,
+        grupo: {
+          include: {
+            programa: true,
+          },
+        },
+      },
+      where: { id },
+    });
   }
 
-  update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
-    return this.prisma.estudiantes.update({
-      where: {
-          id,
+  async update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
+    const { user } = updateEstudianteDto;
+
+    const estudiante = await this.prisma.estudiantes.update({
+      where: { id },
+      data: {
+        institucionId: updateEstudianteDto.institucionId,
       },
-      data: updateEstudianteDto,
-    })
+    });
+
+    await this.prisma.users.update({
+      where: { id: estudiante.userId },
+      data: user,
+    });
+
+    return estudiante;
   }
 
   remove(id: number) {
     return this.prisma.estudiantes.delete({
       where: { id },
-    })
+    });
   }
 }

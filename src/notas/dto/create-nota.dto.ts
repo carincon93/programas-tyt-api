@@ -1,15 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger"
 
 export class CreateNotaDto {
-    @ApiProperty()
-    nota:                number
+  @ApiProperty()
+  nota: number;
 
-    @ApiProperty()
-    fecha:               string
+  @ApiProperty()
+  fecha: string;
 
-    @ApiProperty()
-    observacion:         string
-  
-    @ApiProperty()
-    estudianteId:        number
+  @ApiProperty()
+  observacion: string;
 }

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUniversidadeDto {
+export class CreateHorarioDto {
   @ApiProperty()
-  nombre: string;
+  horaInicio: string;
 
   @ApiProperty()
-  direccion: string;
+  horaFin: string;
 
   @ApiProperty()
-  telefono: string;
+  fecha: string;
 }

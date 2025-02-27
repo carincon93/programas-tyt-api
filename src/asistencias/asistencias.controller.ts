@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AsistenciasService } from './asistencias.service';
 import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 import { UpdateAsistenciaDto } from './dto/update-asistencia.dto';
@@ -7,14 +15,27 @@ import { UpdateAsistenciaDto } from './dto/update-asistencia.dto';
 export class AsistenciasController {
   constructor(private readonly asistenciasService: AsistenciasService) {}
 
-  @Post()
-  create(@Body() createAsistenciaDto: CreateAsistenciaDto) {
-    return this.asistenciasService.create(createAsistenciaDto);
+  @Post(':asignaturaProfesorId/estudiantes/:estudianteId')
+  create(
+    @Param('asignaturaProfesorId') asignaturaProfesorId: string,
+    @Param('estudianteId') estudianteId: string,
+    @Body() createAsistenciaDto: CreateAsistenciaDto,
+  ) {
+    return this.asistenciasService.create(
+      +asignaturaProfesorId,
+      +estudianteId,
+      createAsistenciaDto,
+    );
   }
 
   @Get()
   findAll() {
     return this.asistenciasService.findAll();
+  }
+
+  @Get('estudiantes/:estudianteId')
+  findAllByEstudiante(@Param('estudianteId') estudianteId: string) {
+    return this.asistenciasService.findAllByEstudiante(+estudianteId);
   }
 
   @Get(':id')
@@ -23,7 +44,10 @@ export class AsistenciasController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAsistenciaDto: UpdateAsistenciaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAsistenciaDto: UpdateAsistenciaDto,
+  ) {
     return this.asistenciasService.update(+id, updateAsistenciaDto);
   }
 
