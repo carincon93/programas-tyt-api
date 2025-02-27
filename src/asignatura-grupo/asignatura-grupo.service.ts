@@ -17,8 +17,10 @@ export class AsignaturaGrupoService {
   findAll() {
     return this.prisma.asignaturaGrupo.findMany({
       include: {
+        grupo: { include: { programa: true } },
         asignaturaProfesor: {
           include: {
+            asignatura: true,
             profesor: {
               include: {
                 user: true,

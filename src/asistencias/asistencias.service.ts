@@ -21,7 +21,32 @@ export class AsistenciasService {
     });
   }
 
-  findAll(estudianteId: number) {
+  findAll() {
+    return this.prisma.asistencias.findMany({
+      include: {
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+            profesor: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+        estudiante: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
+  findAllByEstudiante(estudianteId: number) {
     return this.prisma.asistencias.findMany({
       include: {
         asignaturaProfesor: {

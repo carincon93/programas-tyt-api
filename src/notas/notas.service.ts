@@ -28,6 +28,11 @@ export class NotasService {
       include: {
         asignaturaProfesor: {
           include: {
+            profesor: {
+              include: {
+                user: true,
+              },
+            },
             asignatura: true,
           },
         },

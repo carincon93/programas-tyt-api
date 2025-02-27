@@ -28,9 +28,14 @@ export class AsistenciasController {
     );
   }
 
+  @Get()
+  findAll() {
+    return this.asistenciasService.findAll();
+  }
+
   @Get('estudiantes/:estudianteId')
-  findAll(@Param('estudianteId') estudianteId: string) {
-    return this.asistenciasService.findAll(+estudianteId);
+  findAllByEstudiante(@Param('estudianteId') estudianteId: string) {
+    return this.asistenciasService.findAllByEstudiante(+estudianteId);
   }
 
   @Get(':id')
