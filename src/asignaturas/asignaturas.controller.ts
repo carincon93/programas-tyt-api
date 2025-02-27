@@ -21,12 +21,12 @@ export class AsignaturasController {
     return this.asignaturasService.create(createAsignaturaDto);
   }
 
-  @Post(':asignaturaId/profesor/:profesorId')
+  @Post(':asignaturaId/profesores')
   assignProfesor(
     @Param('asignaturaId') asignaturaId: string,
-    @Param('profesorId') profesorId: string,
+    @Body() body: number[],
   ) {
-    return this.asignaturasService.assignProfesor(+asignaturaId, +profesorId);
+    return this.asignaturasService.assignProfesor(+asignaturaId, body);
   }
 
   @Post(':asignaturaProfesorId/grupo/:grupoId')

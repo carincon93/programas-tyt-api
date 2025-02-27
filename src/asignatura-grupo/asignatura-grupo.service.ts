@@ -40,9 +40,9 @@ export class AsignaturaGrupoService {
           horarios: {
             some: {
               grupo: {
-                estudianteGrupos: {
+                estudiantes: {
                   some: {
-                    estudianteId: estudianteId,
+                    id: estudianteId,
                   },
                 },
               },
@@ -54,7 +54,12 @@ export class AsignaturaGrupoService {
         asignaturaProfesor: {
           include: {
             asignatura: true,
-            horarios: true, // Opcional si solo necesitas saber que existen
+            horarios: true,
+            profesor: {
+              include: {
+                user: true,
+              },
+            },
           },
         },
       },

@@ -30,6 +30,11 @@ export class ProfesoresController {
     return this.profesoresService.findAsignaturas(+profesorId);
   }
 
+  @Get(':profesorId/asignatura')
+  findAsignaturaByProfesorId(@Param('profesorId') profesorId: string) {
+    return this.profesoresService.findAsignaturaProfesorById(+profesorId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.profesoresService.findOne(+id);

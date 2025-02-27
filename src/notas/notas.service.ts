@@ -8,7 +8,7 @@ export class NotasService {
   constructor(private prisma: PrismaService) {}
 
   create(
-    asignaturaId: number,
+    asignaturaProfesorId: number,
     estudianteId: number,
     createNotaDto: CreateNotaDto,
   ) {
@@ -17,7 +17,7 @@ export class NotasService {
     return this.prisma.notas.create({
       data: {
         ...createNotaDto,
-        asignaturaId,
+        asignaturaProfesorId,
         estudianteId,
       },
     });
@@ -26,7 +26,11 @@ export class NotasService {
   findAll() {
     return this.prisma.notas.findMany({
       include: {
-        asignatura: true,
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+          },
+        },
         estudiante: {
           include: {
             user: true,
@@ -42,7 +46,16 @@ export class NotasService {
   findAllByEstudiante(estudianteId: number) {
     return this.prisma.notas.findMany({
       include: {
-        asignatura: true,
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+            profesor: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
         estudiante: {
           include: {
             user: true,
@@ -61,7 +74,11 @@ export class NotasService {
   findOne(id: number) {
     return this.prisma.notas.findUnique({
       include: {
-        asignatura: true,
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+          },
+        },
         estudiante: {
           include: {
             user: true,

@@ -17,6 +17,7 @@ export class EstudiantesService {
     return await this.prisma.estudiantes.create({
       data: {
         institucionId: createEstudianteDto.institucionId,
+        grupoId: createEstudianteDto.grupoId,
         codigoEstudiante: createEstudianteDto.codigoEstudiante,
         userId: newUser.id,
       },
@@ -28,13 +29,9 @@ export class EstudiantesService {
       include: {
         user: true,
         institucion: true,
-        estudianteGrupos: {
+        grupo: {
           include: {
-            grupo: {
-              include: {
-                programa: true,
-              },
-            },
+            programa: true,
           },
         },
       },
@@ -49,13 +46,9 @@ export class EstudiantesService {
       include: {
         user: true,
         institucion: true,
-        estudianteGrupos: {
+        grupo: {
           include: {
-            grupo: {
-              include: {
-                programa: true,
-              },
-            },
+            programa: true,
           },
         },
       },

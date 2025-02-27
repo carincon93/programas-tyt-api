@@ -20,14 +20,6 @@ export class GruposController {
     return this.gruposService.create(createGrupoDto);
   }
 
-  @Post(':grupoId/estudiante/:estudianteId')
-  enrollEstudiante(
-    @Param('grupoId') grupoId: string,
-    @Param('estudianteId') estudianteId: string,
-  ) {
-    return this.gruposService.enrollEstudiante(+grupoId, +estudianteId);
-  }
-
   @Get()
   findAll() {
     return this.gruposService.findAll();

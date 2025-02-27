@@ -15,14 +15,14 @@ import { UpdateNotaDto } from './dto/update-nota.dto';
 export class NotasController {
   constructor(private readonly notasService: NotasService) {}
 
-  @Post(':asignaturaId/estudiante/:estudianteId')
+  @Post(':asignaturaProfesorId/estudiante/:estudianteId')
   create(
-    @Param('asignaturaId') asignaturaId: string,
+    @Param('asignaturaProfesorId') asignaturaProfesorId: string,
     @Param('estudianteId') estudianteId: string,
     @Body() createNotaDto: CreateNotaDto,
   ) {
     return this.notasService.create(
-      +asignaturaId,
+      +asignaturaProfesorId,
       +estudianteId,
       createNotaDto,
     );

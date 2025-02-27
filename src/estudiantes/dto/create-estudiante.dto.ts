@@ -10,4 +10,7 @@ export class CreateEstudianteDto {
 
   @ApiProperty()
   institucionId: number;
+
+  @ApiProperty()
+  grupoId: number;
 }

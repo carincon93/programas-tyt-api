@@ -15,15 +15,6 @@ export class GruposService {
     });
   }
 
-  enrollEstudiante(grupoId: number, estudianteId: number) {
-    return this.prisma.estudianteGrupo.create({
-      data: {
-        estudianteId,
-        grupoId,
-      },
-    });
-  }
-
   findAll() {
     return this.prisma.grupos.findMany({
       include: {
@@ -39,14 +30,10 @@ export class GruposService {
     return this.prisma.grupos.findUnique({
       include: {
         programa: true,
-        estudianteGrupos: {
+        estudiantes: {
           include: {
-            estudiante: {
-              include: {
-                user: true,
-                institucion: true,
-              },
-            },
+            user: true,
+            institucion: true,
           },
         },
       },

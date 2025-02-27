@@ -35,6 +35,34 @@ export class ProfesoresService {
     });
   }
 
+  findAsignaturaProfesorById(profesorId: number) {
+    return this.prisma.asignaturaProfesor.findFirst({
+      include: {
+        asignatura: true,
+        profesor: {
+          include: {
+            user: true,
+          },
+        },
+        horarios: {
+          include: {
+            grupo: {
+              include: {
+                programa: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        id: profesorId,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
   findAsignaturas(profesorId: number) {
     return this.prisma.asignaturaProfesor.findMany({
       include: {

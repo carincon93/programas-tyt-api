@@ -8,15 +8,14 @@ export class AsistenciasService {
   constructor(private prisma: PrismaService) {}
 
   create(
-    asignaturaId: number,
+    asignaturaProfesorId: number,
     estudianteId: number,
     createAsistenciaDto: CreateAsistenciaDto,
   ) {
-
     return this.prisma.asistencias.create({
       data: {
         ...createAsistenciaDto,
-        asignaturaId,
+        asignaturaProfesorId,
         estudianteId,
       },
     });
@@ -25,7 +24,16 @@ export class AsistenciasService {
   findAll(estudianteId: number) {
     return this.prisma.asistencias.findMany({
       include: {
-        asignatura: true,
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+            profesor: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
         estudiante: {
           include: {
             user: true,
@@ -44,7 +52,11 @@ export class AsistenciasService {
   findOne(id: number) {
     return this.prisma.asistencias.findUnique({
       include: {
-        asignatura: true,
+        asignaturaProfesor: {
+          include: {
+            asignatura: true,
+          },
+        },
         estudiante: {
           include: {
             user: true,

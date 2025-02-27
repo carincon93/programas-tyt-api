@@ -62,8 +62,6 @@ model Asignaturas {
   codigoAsignatura    String              @unique
   nombre              String
 
-  asistencias         Asistencias[]
-  notas               Notas[]
   asignaturaProfesores AsignaturaProfesor[]
 
   createdAt           DateTime            @default(now())
@@ -77,7 +75,7 @@ model Grupos {
   programaId          Int
   programa            Programas           @relation(fields: [programaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  estudianteGrupos    EstudianteGrupo[]     
+  estudiantes         Estudiantes[]     
   horarios            AsignaturaGrupo[]     
 
   createdAt           DateTime            @default(now())
@@ -126,6 +124,9 @@ model AsignaturaProfesor {
 
   horarios            AsignaturaGrupo[]
 
+  notas               Notas[]
+  asistencias         Asistencias[]
+
 }
 
 // 
@@ -151,7 +152,8 @@ model Estudiantes {
   institucionId       Int
   institucion         Instituciones       @relation(fields: [institucionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  estudianteGrupos    EstudianteGrupo[]            
+  grupoId             Int
+  grupo               Grupos              @relation(fields: [grupoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   notas               Notas[]
   asistencias         Asistencias[]
@@ -160,18 +162,6 @@ model Estudiantes {
   updatedAt           DateTime            @updatedAt  
 }
 
-model EstudianteGrupo {
-  id                  Int                 @default(autoincrement()) @id
-
-  estudianteId        Int
-  estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  grupoId             Int
-  grupo               Grupos              @relation(fields: [grupoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt  
-}
 
 model Notas {
   id                  Int                 @default(autoincrement()) @id
@@ -179,8 +169,8 @@ model Notas {
   fecha               String
   observacion         String
 
-  asignaturaId        Int
-  asignatura          Asignaturas         @relation(fields: [asignaturaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  asignaturaProfesorId Int
+  asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   estudianteId        Int
   estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -195,8 +185,8 @@ model Asistencias {
   fecha               String
   observacion         String
 
-  asignaturaId        Int
-  asignatura          Asignaturas         @relation(fields: [asignaturaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  asignaturaProfesorId Int
+  asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   estudianteId        Int
   estudiante          Estudiantes         @relation(fields: [estudianteId], references: [id], onDelete: Cascade, onUpdate: Cascade)

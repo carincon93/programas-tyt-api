@@ -14,13 +14,22 @@ export class AsignaturasService {
     });
   }
 
-  assignProfesor(asignaturaId: number, profesorId: number) {
-    return this.prisma.asignaturaProfesor.create({
-      data: {
+  async assignProfesor(asignaturaId: number, profesoresId: number[]) {
+    await this.prisma.asignaturaProfesor.deleteMany({
+      where: {
         asignaturaId: asignaturaId,
-        profesorId: profesorId,
       },
     });
+
+    const asignaciones = await profesoresId.map((profesorId) => {
+      return this.prisma.asignaturaProfesor.create({
+        data: {
+          asignaturaId: asignaturaId,
+          profesorId: profesorId,
+        },
+      });
+    });
+    return this.prisma.$transaction(asignaciones);
   }
 
   assignHorario(
@@ -67,9 +76,9 @@ export class AsignaturasService {
               include: {
                 grupo: {
                   include: {
-                    estudianteGrupos: {
+                    estudiantes: {
                       where: {
-                        estudianteId: estudianteId,
+                        id: estudianteId,
                       },
                     },
                   },

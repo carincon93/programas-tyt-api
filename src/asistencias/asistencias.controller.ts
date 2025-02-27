@@ -15,14 +15,14 @@ import { UpdateAsistenciaDto } from './dto/update-asistencia.dto';
 export class AsistenciasController {
   constructor(private readonly asistenciasService: AsistenciasService) {}
 
-  @Post(':asignaturaId/estudiantes/:estudianteId')
+  @Post(':asignaturaProfesorId/estudiantes/:estudianteId')
   create(
-    @Param('asignaturaId') asignaturaId: string,
+    @Param('asignaturaProfesorId') asignaturaProfesorId: string,
     @Param('estudianteId') estudianteId: string,
     @Body() createAsistenciaDto: CreateAsistenciaDto,
   ) {
     return this.asistenciasService.create(
-      +asignaturaId,
+      +asignaturaProfesorId,
       +estudianteId,
       createAsistenciaDto,
     );
