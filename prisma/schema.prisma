@@ -17,11 +17,12 @@ model Users {
   id                  Int                 @default(autoincrement()) @id
   nombres             String
   apellidos           String
-  correo              String
+  email               String              @unique
+  password            String
   telefono            String
-  direccion           String
+  direccion           String?
   tipoDocumento       String
-  numeroDocumento     String
+  numeroDocumento     String              @unique
 
   profesores          Profesores[]
   estudiantes         Estudiantes[]
@@ -133,7 +134,7 @@ model AsignaturaProfesor {
 model Instituciones {
   id                  Int                 @default(autoincrement()) @id
   nombre              String
-  direccion           String
+  direccion           String?
   telefono            String
 
   estudiantes         Estudiantes[]
@@ -167,7 +168,7 @@ model Notas {
   id                  Int                 @default(autoincrement()) @id
   nota                Float
   fecha               String
-  observacion         String
+  observacion         String?
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -183,7 +184,7 @@ model Asistencias {
   id                  Int                 @default(autoincrement()) @id
   asiste              Boolean
   fecha               String
-  observacion         String
+  observacion         String?
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
