@@ -15,9 +15,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProgramasModule } from './programas/programas.module';
 import { ProfesoresModule } from './profesores/profesores.module';
 import { AsignaturaGrupoModule } from './asignatura-grupo/asignatura-grupo.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UniversidadesModule,
     ProgramasModule,
     GruposModule,
