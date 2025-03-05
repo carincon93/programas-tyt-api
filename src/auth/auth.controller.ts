@@ -39,7 +39,8 @@ export class AuthController {
       sameSite: 'lax', // TODO Debe ser Strict
       path: '/',
     });
-    return response.json();
+
+    return response.json({ data: { user: user } });
   }
 
   @UseGuards(AuthGuard)
@@ -62,7 +63,29 @@ export class AuthController {
       sameSite: 'lax', // TODO Debe ser Strict
       path: '/',
     });
-    return response.json({ message: 'Token refreshed' });
+
+    response.cookie('refresh_token', tokens.refreshToken, {
+      httpOnly: true,
+      secure: false, // TODO En producción debe ser true por el HTTPS
+      sameSite: 'lax', // TODO Debe ser Strict
+      path: '/',
+    });
+
+    try {
+      return response.json({
+        ok: true,
+        status: HttpStatus.OK,
+        data: { message: 'Token refreshed' },
+        error: null,
+      });
+    } catch (error) {
+      return response.json({
+        ok: false,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+        error: error.message,
+      });
+    }
   }
 
   @Public()
@@ -89,6 +112,7 @@ export class AuthController {
     return res.json({ token });
   }
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Res() response) {
     response.clearCookie('auth_token');

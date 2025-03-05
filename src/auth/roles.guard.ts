@@ -1,31 +1,30 @@
 import {
+  Injectable,
   CanActivate,
   ExecutionContext,
-  Injectable,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { jwtConstants } from './auth.constants';
-import { IS_PUBLIC_KEY } from 'src/decorators/public.decorator';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { ROLES_KEY } from 'src/decorators/roles.decorator';
+import { jwtConstants } from './auth.constants';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    // Obtener los roles requeridos desde el decorador
+    const requiredRoles = this.reflector.get<string[]>(
+      ROLES_KEY,
       context.getHandler(),
-      context.getClass(),
-    ]);
-    if (isPublic) {
-      // 💡 See this condition
-      return true;
-    }
+    );
+    if (!requiredRoles) return true; // Si no hay roles requeridos, permitir acceso
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -38,11 +37,19 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      request['user'] = payload;
+
+      const user = payload;
+
+      if (!user) {
+        throw new ForbiddenException('User not found');
+      }
+
+      const hasRole = requiredRoles.includes(user.role);
+      if (!hasRole) {
+        throw new ForbiddenException('You do not have permission');
+      }
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException('You do not have permission');
     }
 
     return true;

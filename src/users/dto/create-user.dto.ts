@@ -24,4 +24,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   numeroDocumento: string;
+
+  @ApiProperty()
+  rolId: number;
 }

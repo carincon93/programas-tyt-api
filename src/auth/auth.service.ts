@@ -27,14 +27,14 @@ export class AuthService {
       throw new HttpException('Credenciales inválidas', HttpStatus.BAD_REQUEST);
     }
 
-    return { id: user.id, email: user.email };
+    return { id: user.id, email: user.email, role: user.rol.nombre };
   }
 
   async login(user: Record<string, any>) {
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = this.jwtService.sign(payload, {
       secret: jwtConstants.secret,
-      // expiresIn: '15m',
+      expiresIn: '5m',
     });
     const refreshToken = this.jwtService.sign(payload, {
       secret: jwtConstants.secret,
