@@ -24,8 +24,23 @@ model Users {
   tipoDocumento       String
   numeroDocumento     String              @unique
 
+  rolId               Int                 
+  rol                 Roles               @relation(fields: [rolId], references: [id])
+
   profesores          Profesores[]
   estudiantes         Estudiantes[]
+  
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Roles {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+  descripcion         String
+
+  users               Users[]
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt  
@@ -195,7 +210,6 @@ model Asistencias {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt   
 }
-
 
 // 
 model Informes {
