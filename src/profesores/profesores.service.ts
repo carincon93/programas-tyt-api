@@ -2,17 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
 import { UpdateProfesorDto } from './dto/update-profesor.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ProfesoresService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private usersService: UsersService,
+  ) {}
 
   async create(createProfesorDto: CreateProfesorDto) {
     const { user } = createProfesorDto;
 
-    const newUser = await this.prisma.users.create({
-      data: { ...user },
-    });
+    user.rolId = 3;
+
+    const newUser = await this.usersService.create(user);
 
     return await this.prisma.profesores.create({
       data: {

@@ -15,9 +15,14 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProgramasModule } from './programas/programas.module';
 import { ProfesoresModule } from './profesores/profesores.module';
 import { AsignaturaGrupoModule } from './asignatura-grupo/asignatura-grupo.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles.guard';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
+    AuthModule,
     UniversidadesModule,
     ProgramasModule,
     GruposModule,
@@ -32,8 +37,15 @@ import { AsignaturaGrupoModule } from './asignatura-grupo/asignatura-grupo.modul
     InformesModule,
     DashboardModule,
     PrismaModule,
+    RolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard, // Hacer que RolesGuard se aplique a todas las rutas
+    },
+  ],
 })
 export class AppModule {}

@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AsignaturasService } from './asignaturas.service';
 import { CreateAsignaturaDto } from './dto/create-asignatura.dto';
 import { UpdateAsignaturaDto } from './dto/update-asignatura.dto';
 import { CreateHorarioDto } from './dto/create-horario.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('asignaturas')
 export class AsignaturasController {
@@ -42,6 +46,8 @@ export class AsignaturasController {
     );
   }
 
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
   @Get()
   findAll() {
     return this.asignaturasService.findAll();

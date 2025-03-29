@@ -17,14 +17,30 @@ model Users {
   id                  Int                 @default(autoincrement()) @id
   nombres             String
   apellidos           String
-  correo              String
+  email               String              @unique
+  password            String
   telefono            String
-  direccion           String
+  direccion           String?
   tipoDocumento       String
-  numeroDocumento     String
+  numeroDocumento     String              @unique
+
+  rolId               Int                 
+  rol                 Roles               @relation(fields: [rolId], references: [id])
 
   profesores          Profesores[]
   estudiantes         Estudiantes[]
+  
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt  
+}
+
+model Roles {
+  id                  Int                 @default(autoincrement()) @id
+  nombre              String
+  descripcion         String
+
+  users               Users[]
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt  
@@ -133,7 +149,7 @@ model AsignaturaProfesor {
 model Instituciones {
   id                  Int                 @default(autoincrement()) @id
   nombre              String
-  direccion           String
+  direccion           String?
   telefono            String
 
   estudiantes         Estudiantes[]
@@ -167,7 +183,7 @@ model Notas {
   id                  Int                 @default(autoincrement()) @id
   nota                Float
   fecha               String
-  observacion         String
+  observacion         String?
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -183,7 +199,7 @@ model Asistencias {
   id                  Int                 @default(autoincrement()) @id
   asiste              Boolean
   fecha               String
-  observacion         String
+  observacion         String?
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -194,7 +210,6 @@ model Asistencias {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt   
 }
-
 
 // 
 model Informes {

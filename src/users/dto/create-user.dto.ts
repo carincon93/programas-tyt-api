@@ -8,7 +8,10 @@ export class CreateUserDto {
   apellidos: string;
 
   @ApiProperty()
-  correo: string;
+  email: string;
+
+  @ApiProperty()
+  password: string;
 
   @ApiProperty()
   telefono: string;
@@ -21,4 +24,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   numeroDocumento: string;
+
+  @ApiProperty()
+  rolId: number;
 }
