@@ -30,16 +30,14 @@ export class AuthController {
     response.cookie('auth_token', tokens.accessToken, {
       httpOnly: true,
       secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'none', // TODO Debe ser Strict
-      path: '/', // Asegúrate de que el path sea explícitamente '/'
-      domain: '.page-t-y-t.vercel.app', // Cambiar al dominio deseado (usar un punto inicial para subdominios)
+      sameSite: 'lax', // TODO Debe ser Strict
+      path: '/',
     });
     response.cookie('refresh_token', tokens.refreshToken, {
       httpOnly: true,
       secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'none', // TODO Debe ser Strict
-      path: '/', // Asegúrate de que el path sea explícitamente '/'
-      domain: '.page-t-y-t.vercel.app', // Cambiar al dominio deseado (usar un punto inicial para subdominios)
+      sameSite: 'lax', // TODO Debe ser Strict
+      path: '/',
     });
 
     return response.json({ data: { user: user } });

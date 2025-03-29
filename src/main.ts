@@ -27,7 +27,18 @@ async function bootstrap() {
 
   // Configurar CORS con validación de origen
   app.enableCors({
-    origin: 'https://page-t-y-t.vercel.app',
+    origin: (origin, callback) => {
+      console.log('ORIGIN:', origin);
+
+      // Permitir solicitudes sin origen (como Postman o herramientas locales)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true); // Permitir el origen si está en la lista
+      } else {
+        callback(new Error('Not allowed by CORS')); // Rechazar el origen
+      }
+    },
     credentials: true, // Permitir cookies y cabeceras de autorización
   });
 
