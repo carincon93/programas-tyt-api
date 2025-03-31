@@ -58,7 +58,14 @@ export class AuthController {
   @Public()
   @Get('refresh')
   async refresh(@Req() request, @Res() response) {
-    const refreshToken = request.cookies['refresh_token'];
+    let refreshToken = request.cookies['refresh_token']; // 🔥 Obtener el token de la cookie
+
+    if (!refreshToken) {
+      const authHeader = request.headers['authorization'];
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+      refreshToken = authHeader.split(' ')[1]; // Obtener el token del header Authorization
+      }
+    }
 
     if (!refreshToken) throw new UnauthorizedException('No refresh token');
 
