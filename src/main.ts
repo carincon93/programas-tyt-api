@@ -3,15 +3,11 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
-
-const server: express.Application = express();
 
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
@@ -50,5 +46,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-export default server;
