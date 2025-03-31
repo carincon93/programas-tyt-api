@@ -23,6 +23,7 @@ model Users {
   direccion           String?
   tipoDocumento       String
   numeroDocumento     String              @unique
+  activo              Boolean             @default(true)
 
   rolId               Int                 
   rol                 Roles               @relation(fields: [rolId], references: [id])

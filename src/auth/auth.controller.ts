@@ -27,20 +27,26 @@ export class AuthController {
     const user = await this.authService.validateUser(body.email, body.password);
     const tokens = await this.authService.login(user);
 
-    response.cookie('auth_token', tokens.accessToken, {
-      httpOnly: true,
-      secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'lax', // TODO Debe ser Strict
-      path: '/',
-    });
-    response.cookie('refresh_token', tokens.refreshToken, {
-      httpOnly: true,
-      secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'lax', // TODO Debe ser Strict
-      path: '/',
-    });
+    // 🔥 TODO: Usar cuando el dominio sea el mismo
 
-    return response.json({ data: { user: user } });
+    // response.cookie('auth_token', tokens.accessToken, {
+    //   httpOnly: true,
+    //   secure: false, // TODO En producción debe ser true por el HTTPS
+    //   sameSite: 'lax', // TODO Debe ser Strict
+    //   path: '/',
+    // });
+
+    // response.cookie('refresh_token', tokens.refreshToken, {
+    //   httpOnly: true,
+    //   secure: false, // TODO En producción debe ser true por el HTTPS
+    //   sameSite: 'lax', // TODO Debe ser Strict
+    //   path: '/',
+    // });
+
+    return response.json({
+      statusCode: 200,
+      data: { user: user, tokens: tokens },
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -57,25 +63,28 @@ export class AuthController {
     if (!refreshToken) throw new UnauthorizedException('No refresh token');
 
     const tokens = await this.authService.refreshToken(refreshToken);
-    response.cookie('auth_token', tokens.accessToken, {
-      httpOnly: true,
-      secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'lax', // TODO Debe ser Strict
-      path: '/',
-    });
 
-    response.cookie('refresh_token', tokens.refreshToken, {
-      httpOnly: true,
-      secure: false, // TODO En producción debe ser true por el HTTPS
-      sameSite: 'lax', // TODO Debe ser Strict
-      path: '/',
-    });
+    // 🔥 TODO: Usar cuando el dominio sea el mismo
+
+    // response.cookie('auth_token', tokens.accessToken, {
+    //   httpOnly: true,
+    //   secure: false, // TODO En producción debe ser true por el HTTPS
+    //   sameSite: 'lax', // TODO Debe ser Strict
+    //   path: '/',
+    // });
+
+    // response.cookie('refresh_token', tokens.refreshToken, {
+    //   httpOnly: true,
+    //   secure: false, // TODO En producción debe ser true por el HTTPS
+    //   sameSite: 'lax', // TODO Debe ser Strict
+    //   path: '/',
+    // });
 
     try {
       return response.json({
         ok: true,
         status: HttpStatus.OK,
-        data: { message: 'Token refreshed' },
+        data: { message: 'Token refreshed', tokens: tokens },
         error: null,
       });
     } catch (error) {
