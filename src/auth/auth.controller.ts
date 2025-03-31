@@ -53,7 +53,7 @@ export class AuthController {
   @Public()
   @Get('profile')
   getProfile(@Request() req) {
-    console.log(req.user);
+    console.log(req);
     
     return req.user;
   }
