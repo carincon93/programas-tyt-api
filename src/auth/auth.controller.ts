@@ -49,8 +49,7 @@ export class AuthController {
     });
   }
 
-  // @UseGuards(AuthGuard)
-  @Public()
+  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     console.log(req);
