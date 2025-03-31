@@ -112,7 +112,14 @@ export class AuthController {
   @Public()
   @Get('token')
   getToken(@Req() req, @Res() res: Response) {
-    const token = req.cookies['auth_token']; // 🔥 Obtener el token de la cookie
+    let token = req.cookies['auth_token']; // 🔥 Obtener el token de la cookie
+
+    if (!token) {
+      const authHeader = req.headers['authorization'];
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1]; // Obtener el token del header Authorization
+      }
+    }
 
     if (!token) {
       return res.status(401).json({ message: 'No autorizado' });
