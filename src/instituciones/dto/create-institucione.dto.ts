@@ -9,4 +9,7 @@ export class CreateInstitucioneDto {
 
   @ApiProperty()
   telefono: string;
+
+  @ApiProperty()
+  activo: boolean;
 }

@@ -6,4 +6,7 @@ export class CreateGrupoDto {
 
   @ApiProperty()
   programaId: number;
+
+  @ApiProperty()
+  activo: boolean;
 }
