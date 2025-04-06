@@ -6,4 +6,7 @@ export class CreateAsignaturaDto {
 
   @ApiProperty()
   nombre: string;
+
+  @ApiProperty()
+  activo: boolean;
 }

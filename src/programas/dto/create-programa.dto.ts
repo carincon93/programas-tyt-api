@@ -9,4 +9,7 @@ export class CreateProgramaDto {
 
   @ApiProperty()
   universidadId: number;
+
+  @ApiProperty()
+  activo: boolean;
 }
