@@ -10,4 +10,7 @@ export class CreateAsistenciaDto {
 
   @ApiProperty()
   observacion: string;
+
+  @ApiProperty()
+  periodo: string;
 }

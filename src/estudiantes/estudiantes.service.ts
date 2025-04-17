@@ -50,6 +50,11 @@ export class EstudiantesService {
       include: {
         user: true,
         institucion: true,
+        notas: {
+          include: {
+            asignaturaProfesor: true,
+          },
+        },
         grupo: {
           include: {
             programa: true,

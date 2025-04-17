@@ -195,6 +195,7 @@ model Notas {
   nota                Float
   fecha               String
   observacion         String?
+  periodo             String              @default("1")
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -211,6 +212,7 @@ model Asistencias {
   asiste              Boolean
   fecha               String
   observacion         String?
+  periodo             String              @default("1")
 
   asignaturaProfesorId Int
   asignaturaProfesor  AsignaturaProfesor  @relation(fields: [asignaturaProfesorId], references: [id], onDelete: Cascade, onUpdate: Cascade)

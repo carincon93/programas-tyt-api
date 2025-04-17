@@ -9,4 +9,7 @@ export class CreateNotaDto {
 
   @ApiProperty()
   observacion: string;
+
+  @ApiProperty()
+  periodo: string;
 }

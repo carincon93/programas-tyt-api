@@ -34,6 +34,52 @@ export class GruposService {
           include: {
             user: true,
             institucion: true,
+            grupo: {
+              include: {
+                horarios: {
+                  include: {
+                    asignaturaProfesor: {
+                      include: {
+                        asignatura: true,
+                        profesor: {
+                          include: {
+                            user: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            notas: {
+              include: {
+                asignaturaProfesor: {
+                  include: {
+                    asignatura: true,
+                    profesor: {
+                      include: {
+                        user: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            asistencias: {
+              include: {
+                asignaturaProfesor: {
+                  include: {
+                    asignatura: true,
+                    profesor: {
+                      include: {
+                        user: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
