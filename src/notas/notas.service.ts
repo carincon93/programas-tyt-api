@@ -7,14 +7,34 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class NotasService {
   constructor(private prisma: PrismaService) {}
 
-  create(
+  async create(
     asignaturaProfesorId: number,
     estudianteId: number,
     createNotaDto: CreateNotaDto,
   ) {
     createNotaDto.nota = Number(createNotaDto.nota);
 
-    return this.prisma.notas.create({
+    const notasExistentes =
+      await this.prisma.notas.findMany({
+        where: {
+          estudianteId: estudianteId,
+          asignaturaProfesorId: asignaturaProfesorId,
+          periodo: createNotaDto.periodo,
+        },
+    })
+
+    if (notasExistentes.length > 0) {
+      return await this.prisma.notas.update({
+        where: {
+          id: notasExistentes[0].id,
+        },
+        data: {
+          ...createNotaDto
+        }     
+      })
+    }
+
+    return await this.prisma.notas.create({
       data: {
         ...createNotaDto,
         asignaturaProfesorId,
